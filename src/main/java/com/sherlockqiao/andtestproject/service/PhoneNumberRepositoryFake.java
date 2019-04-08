@@ -50,12 +50,34 @@ public class PhoneNumberRepositoryFake {
 				.collect(Collectors.toList());
 	}
 
+	/**
+	 * use customer entity instead of id here to make it an OO approach
+	 * 
+	 * @param customer
+	 * @return
+	 */
 	public List<PhoneNumber> findForCustomer(Customer customer) {
 		return customer.getPhoneNumbers().stream().collect(Collectors.toList());
 	}
 
+	/**
+	 * find customer
+	 * 
+	 * @param customerId
+	 * @return a optional, could be empty
+	 */
 	public Optional<Customer> getCustomer(Long customerId) {
 		return Optional.ofNullable(customers.get(customerId));
 	}
 
+	/**
+	 * get phone entity by id
+	 * 
+	 * @param phoneNumberId
+	 * @return
+	 */
+	public Optional<PhoneNumber> findPhoneNumber(Long phoneNumberId) {
+		return customers.values().stream().flatMap(customer -> customer.getPhoneNumbers().stream())
+				.filter(number -> number.getId().equals(phoneNumberId)).findFirst();
+	}
 }

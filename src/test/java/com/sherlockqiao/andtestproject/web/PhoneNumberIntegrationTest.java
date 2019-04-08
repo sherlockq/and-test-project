@@ -52,8 +52,7 @@ public class PhoneNumberIntegrationTest extends AbstractIntegrationTests {
 	public void doubleActivate() throws Exception {
 		mockMvc.perform(post("/phone-numbers/22/activations")).andExpect(status().isCreated())
 				.andExpect(jsonPath("$", equalTo(Boolean.TRUE)));
-		mockMvc.perform(post("/phone-numbers/22/activations")).andExpect(status().is4xxClientError())
-				.andExpect(jsonPath("$", equalTo(Boolean.FALSE)));
+		mockMvc.perform(post("/phone-numbers/22/activations")).andExpect(status().is4xxClientError());
 	}
 
 	@Test
@@ -65,8 +64,7 @@ public class PhoneNumberIntegrationTest extends AbstractIntegrationTests {
 	@Test
 	public void activateAlreadyActivated() throws Exception {
 
-		mockMvc.perform(post("/phone-numbers/21/activations")).andExpect(status().is4xxClientError())
-				.andExpect(jsonPath("$", equalTo(Boolean.FALSE)));
+		mockMvc.perform(post("/phone-numbers/21/activations")).andExpect(status().is4xxClientError());
 
 	}
 

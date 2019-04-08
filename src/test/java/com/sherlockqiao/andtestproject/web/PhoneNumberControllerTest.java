@@ -82,7 +82,6 @@ public class PhoneNumberControllerTest {
 
 		ResponseEntity<Boolean> response = controller.activatePhoneNumber(21L);
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.UNPROCESSABLE_ENTITY));
-		assertThat(response.getBody(), equalTo(false));
 	}
 
 	@Test

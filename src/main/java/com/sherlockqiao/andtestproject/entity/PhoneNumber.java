@@ -52,4 +52,19 @@ public class PhoneNumber {
 		this.isActivated = isActivated;
 	}
 
+	/**
+	 * activate if not yet; but return false if is already activated
+	 * 
+	 * @return false if already activated. otherwise true.
+	 */
+	public boolean activate() {
+		if (this.isActivated) {
+			return false;
+		}
+		{
+			this.isActivated = true;
+			return true;
+		}
+	}
+
 }
