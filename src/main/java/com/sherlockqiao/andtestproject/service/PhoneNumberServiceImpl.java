@@ -3,18 +3,21 @@ package com.sherlockqiao.andtestproject.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sherlockqiao.andtestproject.entity.Customer;
 import com.sherlockqiao.andtestproject.entity.PhoneNumber;
+import com.sherlockqiao.andtestproject.repository.PhoneNumberRepository;
 
 @Service
 public class PhoneNumberServiceImpl implements PhoneNumberService {
 
-	PhoneNumberRepositoryFake repository;
+	PhoneNumberRepository repository;
 
-	public PhoneNumberServiceImpl() {
-		this.repository = new PhoneNumberRepositoryFake();
+	@Autowired
+	public PhoneNumberServiceImpl(PhoneNumberRepository repository) {
+		this.repository = repository;
 	}
 
 	@Override
@@ -34,12 +37,14 @@ public class PhoneNumberServiceImpl implements PhoneNumberService {
 
 	@Override
 	public void activate(Long phoneNumberId) throws AlreadyActivatedException, NoNumberException {
-		Optional<PhoneNumber> phoneNumber = repository.findPhoneNumber(phoneNumberId);
-		if (!phoneNumber.isPresent()) {
+		Optional<PhoneNumber> phoneNumberOp = repository.findPhoneNumber(phoneNumberId);
+		if (!phoneNumberOp.isPresent()) {
 			throw new NoNumberException();
 		}
 
-		boolean result = phoneNumber.get().activate();
+		PhoneNumber phoneNumber = phoneNumberOp.get();
+		boolean result = phoneNumber.activate();
+		this.repository.save(phoneNumber);
 
 		if (!result) {
 			throw new AlreadyActivatedException();

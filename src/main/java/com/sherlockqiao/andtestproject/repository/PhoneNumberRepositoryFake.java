@@ -1,4 +1,4 @@
-package com.sherlockqiao.andtestproject.service;
+package com.sherlockqiao.andtestproject.repository;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Repository;
 
 import com.sherlockqiao.andtestproject.entity.Customer;
 import com.sherlockqiao.andtestproject.entity.PhoneNumber;
@@ -24,7 +26,8 @@ import com.sherlockqiao.andtestproject.entity.PhoneNumber;
  * @author sherlockq
  *
  */
-public class PhoneNumberRepositoryFake {
+@Repository
+public class PhoneNumberRepositoryFake implements PhoneNumberRepository {
 	private static final Map<Long, Customer> customers = new HashMap<>();
 
 	public PhoneNumberRepositoryFake() {
@@ -45,39 +48,31 @@ public class PhoneNumberRepositoryFake {
 		customers.get(3L).setPhoneNumbers(numbers);
 	}
 
+	@Override
 	public List<PhoneNumber> findAll() {
 		return customers.values().stream().flatMap(customer -> customer.getPhoneNumbers().stream())
 				.collect(Collectors.toList());
 	}
 
-	/**
-	 * use customer entity instead of id here to make it an OO approach
-	 * 
-	 * @param customer
-	 * @return
-	 */
+	@Override
 	public List<PhoneNumber> findForCustomer(Customer customer) {
 		return customer.getPhoneNumbers().stream().collect(Collectors.toList());
 	}
 
-	/**
-	 * find customer
-	 * 
-	 * @param customerId
-	 * @return a optional, could be empty
-	 */
+	@Override
 	public Optional<Customer> getCustomer(Long customerId) {
 		return Optional.ofNullable(customers.get(customerId));
 	}
 
-	/**
-	 * get phone entity by id
-	 * 
-	 * @param phoneNumberId
-	 * @return
-	 */
+	@Override
 	public Optional<PhoneNumber> findPhoneNumber(Long phoneNumberId) {
 		return customers.values().stream().flatMap(customer -> customer.getPhoneNumbers().stream())
 				.filter(number -> number.getId().equals(phoneNumberId)).findFirst();
+	}
+
+	@Override
+	public PhoneNumber save(PhoneNumber phoneNumber) {
+		// do nothing
+		return phoneNumber;
 	}
 }

@@ -15,7 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.sherlockqiao.andtestproject.entity.PhoneNumber;
-import com.sherlockqiao.andtestproject.service.PhoneNumberRepositoryFake;
+import com.sherlockqiao.andtestproject.repository.PhoneNumberRepository;
+import com.sherlockqiao.andtestproject.repository.PhoneNumberRepositoryFake;
 import com.sherlockqiao.andtestproject.service.PhoneNumberService;
 import com.sherlockqiao.andtestproject.service.PhoneNumberService.*;
 
@@ -35,7 +36,7 @@ public class PhoneNumberControllerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		PhoneNumberRepositoryFake fake = new PhoneNumberRepositoryFake();
+		PhoneNumberRepository fake = new PhoneNumberRepositoryFake();
 		controller = new PhoneNumberController(phoneNumberServiceMock);
 		when(phoneNumberServiceMock.findAll()).thenReturn(fake.findAll());
 		when(phoneNumberServiceMock.findForCustomer(1L)).thenReturn(fake.findForCustomer(fake.getCustomer(1L).get()));
