@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * Because phone number
  * @author sherlockq
  *
  */
@@ -18,7 +17,6 @@ public class Customer {
 	private Set<PhoneNumber> phoneNumbers;
 	private String name;
 
-	
 	public Customer(Long id, Set<PhoneNumber> phoneNumbers, String name) {
 		super();
 		this.id = id;

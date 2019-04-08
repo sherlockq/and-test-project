@@ -6,8 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.ALWAYS)
 /**
- * Phone number, it has no visibility to customer to make phone number a
- * property of customer. But it does depend on real business.
+ * Phone number, it has no visibility to customer.
  * 
  * @author sherlockq
  *
@@ -53,7 +52,7 @@ public class PhoneNumber {
 	}
 
 	/**
-	 * activate if not yet; but return false if is already activated
+	 * Activate if not yet; return false if is already activated
 	 * 
 	 * @return false if already activated. otherwise true.
 	 */

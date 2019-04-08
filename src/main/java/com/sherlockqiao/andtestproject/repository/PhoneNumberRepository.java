@@ -8,10 +8,15 @@ import com.sherlockqiao.andtestproject.entity.PhoneNumber;
 
 public interface PhoneNumberRepository {
 
+	/**
+	 * Get all numbers in system
+	 * 
+	 * @return
+	 */
 	List<PhoneNumber> findAll();
 
 	/**
-	 * use customer entity instead of id here to make it an OO approach
+	 * use customer entity instead of id as parameter to make it an OO approach
 	 * 
 	 * @param customer
 	 * @return
@@ -36,6 +41,7 @@ public interface PhoneNumberRepository {
 
 	/**
 	 * To persist changes to phone number;
+	 * 
 	 * @param phoneNumber
 	 * @return
 	 */

@@ -2,12 +2,26 @@ package com.sherlockqiao.andtestproject;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import io.swagger.annotations.Api;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
+@EnableSwagger2
 public class MainApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MainApplication.class, args);
+	}
+
+	@Bean
+	public Docket api() {
+		return new Docket(DocumentationType.SWAGGER_2).useDefaultResponseMessages(false).select()
+				.apis(RequestHandlerSelectors.withClassAnnotation(Api.class)).build();
 	}
 
 }
