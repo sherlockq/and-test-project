@@ -1,0 +1,12 @@
+/bin/
+.classpath
+.project
+/.settings/
+### Gradle ###
+.gradle
+/build/
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+/*.pdf
