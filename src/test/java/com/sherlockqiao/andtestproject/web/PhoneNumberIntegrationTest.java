@@ -49,6 +49,12 @@ public class PhoneNumberIntegrationTest extends AbstractIntegrationTests {
 	}
 
 	@Test
+	public void activateNotExisted() throws Exception {
+		mockMvc.perform(post("/phone-numbers/100/activations")).andExpect(status().isNotFound());
+
+	}
+
+	@Test
 	public void activateAlreadyActivated() throws Exception {
 
 		mockMvc.perform(post("/phone-numbers/21/activations")).andExpect(status().is4xxClientError())

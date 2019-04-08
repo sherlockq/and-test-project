@@ -11,7 +11,7 @@ import com.sherlockqiao.andtestproject.entity.PhoneNumber;
  *
  */
 public interface PhoneNumberService {
-	
+
 	/**
 	 * get all phone numbers
 	 * 
@@ -42,6 +42,20 @@ public interface PhoneNumberService {
 	 *
 	 */
 	public static class NoCustomerException extends RuntimeException {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -2707758994283193748L;
+	};
+
+	/**
+	 * if no phone number for a id found
+	 * 
+	 * @author sherlockq
+	 *
+	 */
+	public static class NoNumberException extends RuntimeException {
 
 		/**
 		 * 

@@ -17,8 +17,7 @@ import org.springframework.http.ResponseEntity;
 import com.sherlockqiao.andtestproject.entity.PhoneNumber;
 import com.sherlockqiao.andtestproject.service.PhoneNumberRepositoryFake;
 import com.sherlockqiao.andtestproject.service.PhoneNumberService;
-import com.sherlockqiao.andtestproject.service.PhoneNumberService.AlreadyActivatedException;
-import com.sherlockqiao.andtestproject.service.PhoneNumberService.NoCustomerException;
+import com.sherlockqiao.andtestproject.service.PhoneNumberService.*;
 
 /**
  * test case for all apis
@@ -42,6 +41,7 @@ public class PhoneNumberControllerTest {
 		when(phoneNumberServiceMock.findForCustomer(1L)).thenReturn(fake.findForCustomer(fake.getCustomer(1L).get()));
 		when(phoneNumberServiceMock.findForCustomer(100L)).thenThrow(new NoCustomerException());
 		doThrow(new AlreadyActivatedException()).when(phoneNumberServiceMock).activate(21L);
+		doThrow(new NoNumberException()).when(phoneNumberServiceMock).activate(100L);
 	}
 
 	@Test
@@ -83,6 +83,14 @@ public class PhoneNumberControllerTest {
 		ResponseEntity<Boolean> response = controller.activatePhoneNumber(21L);
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.UNPROCESSABLE_ENTITY));
 		assertThat(response.getBody(), equalTo(false));
+	}
+
+	@Test
+	public void activateNotFound() throws Exception {
+
+		ResponseEntity<Boolean> response = controller.activatePhoneNumber(100L);
+		assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+
 	}
 
 }
