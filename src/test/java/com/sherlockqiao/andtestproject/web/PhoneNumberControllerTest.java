@@ -4,7 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
-import java.util.List;
+import java.util.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,61 +34,69 @@ public class PhoneNumberControllerTest {
 
 	private PhoneNumberController controller;
 
-	@Before
-	public void setUp() throws Exception {
-		PhoneNumberRepository fake = new PhoneNumberRepositoryFake();
-		controller = new PhoneNumberController(phoneNumberServiceMock);
-		when(phoneNumberServiceMock.findAll()).thenReturn(fake.findAll());
-		when(phoneNumberServiceMock.findForCustomer(1L)).thenReturn(fake.findForCustomer(fake.getCustomer(1L).get()));
-		when(phoneNumberServiceMock.findForCustomer(100L)).thenThrow(new NoCustomerException());
-		doThrow(new AlreadyActivatedException()).when(phoneNumberServiceMock).activate(21L);
-		doThrow(new NoNumberException()).when(phoneNumberServiceMock).activate(100L);
-	}
-
 	@Test
-	public void findAll() throws Exception {
+	public void list_OneDataFromService_ReturnsSame() throws Exception {
+
+		controller = new PhoneNumberController(phoneNumberServiceMock);
+		when(phoneNumberServiceMock.findAll()).thenReturn(Arrays.asList(new PhoneNumber(1L, "number", true)));
 
 		ResponseEntity<List<PhoneNumber>> response = controller.list();
-		assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
-		assertThat(response.getBody().size(), equalTo(3));
-	}
 
-	@Test
-	public void findForCustomer() throws Exception {
-
-		ResponseEntity<List<PhoneNumber>> response = controller.listForCustomer(1L);
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
 		assertThat(response.getBody().size(), equalTo(1));
+		assertThat(response.getBody().get(0).getPhoneNumber(), equalTo("number"));
+	}
+
+	@Test
+	public void listForCustomer_OneDataFromService_ReturnsSame() throws Exception {
+
+		controller = new PhoneNumberController(phoneNumberServiceMock);
+		when(phoneNumberServiceMock.findForCustomer(1L)).thenReturn(Arrays.asList(new PhoneNumber(1L, "number", true)));
+
+		ResponseEntity<List<PhoneNumber>> response = controller.listForCustomer(1L);
+
+		assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
+		assertThat(response.getBody().size(), equalTo(1));
+		assertThat(response.getBody().get(0).getPhoneNumber(), equalTo("number"));
 
 	}
 
 	@Test
-	public void customerNotFound() throws Exception {
+	public void listForCustomer_ServiceThrowNoCustomerException_ReturnNotFound() throws Exception {
+		controller = new PhoneNumberController(phoneNumberServiceMock);
+		when(phoneNumberServiceMock.findForCustomer(1L)).thenThrow(new NoCustomerException());
 
-		ResponseEntity<List<PhoneNumber>> response = controller.listForCustomer(100L);
+		ResponseEntity<List<PhoneNumber>> response = controller.listForCustomer(1L);
+
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
 
 	}
 
 	@Test
-	public void activate() throws Exception {
+	public void activate_ServiceCompleleSilently_ReturnCreatedAndTrue() throws Exception {
+		controller = new PhoneNumberController(phoneNumberServiceMock);
 
-		ResponseEntity<Boolean> response = controller.activatePhoneNumber(11L);
+		ResponseEntity<Boolean> response = controller.activatePhoneNumber(1L);
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.CREATED));
 		assertThat(response.getBody(), equalTo(true));
 	}
 
 	@Test
-	public void activateAlreadyActivated() throws Exception {
+	public void activate_ServiceThrowAlreadyActivatedException_Return422AsCode() throws Exception {
+		controller = new PhoneNumberController(phoneNumberServiceMock);
+		doThrow(new AlreadyActivatedException()).when(phoneNumberServiceMock).activate(1L);
 
-		ResponseEntity<Boolean> response = controller.activatePhoneNumber(21L);
+		ResponseEntity<Boolean> response = controller.activatePhoneNumber(1L);
+
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.UNPROCESSABLE_ENTITY));
 	}
 
 	@Test
-	public void activateNotFound() throws Exception {
+	public void activate_ServiceThrowNoNumberException_Return404() throws Exception {
+		controller = new PhoneNumberController(phoneNumberServiceMock);
 
-		ResponseEntity<Boolean> response = controller.activatePhoneNumber(100L);
+		doThrow(new NoNumberException()).when(phoneNumberServiceMock).activate(1L);
+		ResponseEntity<Boolean> response = controller.activatePhoneNumber(1L);
 		assertThat(response.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
 
 	}
